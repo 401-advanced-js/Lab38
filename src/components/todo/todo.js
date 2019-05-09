@@ -1,63 +1,56 @@
-import React from 'react';
+import React, { useContext, useState } from "react";
 
-import Auth from '../auth/auth.js';
+import Auth from "../auth/auth.js";
 
-import styles from './todo.module.scss';
+import styles from "./todo.module.scss";
 
-class Todo extends React.Component {
+const Todo = props => {
+  const [item, setItem] = useState("");
+  const [toDoItems, setToDoItems] = useState([]);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      item: '',
-      toDoItems: []
-    }
-  }
-
-  handleForm = (e) => {
+  const handleForm = e => {
     e.preventDefault();
     e.target.reset();
-    let item = { title:this.state.item, status:false };
-    this.setState({toDoItems:[...this.state.toDoItems, item]});
+    let Item = { title: item, status: false };
+    setToDoItems([...toDoItems, Item]);
   };
 
-  handleChange = (e) => {
-    this.setState( {item:e.target.value} );
-  }
+  const handleChange = e => {
+    setItem(e.target.value);
+  };
 
-  toggle = (e,id) => {
+  const toggle = (e, id) => {
     e.preventDefault();
-    let toDoItems = this.state.toDoItems.map( (item,idx) =>
-      idx === id ? {title:item.title, status:!item.status} : item
+    let toDoItems = toDoItems.map((item, idx) =>
+      idx === id ? { title: item.title, status: !item.status } : item
     );
-    this.setState({toDoItems});
+    setToDoItems(toDoItems);
   };
 
-  render() {
-    return (
-      <section className={styles.todo}>
+  return (
+    <section className={styles.todo}>
+      <Auth capability="read">
+        {toDoItems.map((item, idx) => (
+          <div key={idx} onClick={e => toggle(e, idx)}>
+            <span className={styles[`complete-${item.status}`]}>
+              {" "}
+              {item.title}{" "}
+            </span>
+          </div>
+        ))}
+      </Auth>
 
-        <Auth capability="read">
-          {this.state.toDoItems.map((item, idx) =>
-            <div key={idx} onClick={(e) => this.toggle(e, idx)}>
-              <span className={styles[`complete-${item.status}`]}> {item.title} </span>
-            </div>
-          )}
-        </Auth>
-
-        <Auth capability="create">
-          <form onSubmit={this.handleForm}>
-            <input
-              onChange={this.handleChange}
-              name="item"
-              placeholder="Add To Do List Item Here"
-            />
-          </form>
-        </Auth>
-
-      </section>
-    );
-  }
+      <Auth capability="create">
+        <form onSubmit={handleForm}>
+          <input
+            onChange={handleChange}
+            name="item"
+            placeholder="Add To Do List Item Here"
+          />
+        </form>
+      </Auth>
+    </section>
+  );
 };
 
 export default Todo;
