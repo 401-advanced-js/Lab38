@@ -1,7 +1,7 @@
 # Lab38 Spencer Hirata
 
 - [Code sandbox](https://codesandbox.io/s/m9oz91vmmy)
-- [PR]()
+- [PR](https://github.com/shiratap/Lab38/pull/1)
 
 ### Login/Auth System
 
